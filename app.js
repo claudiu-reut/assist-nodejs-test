@@ -29,13 +29,22 @@ app.get("/", (req, res) => {
 app.get("/api/sign-up", (req, res) => {
   console.log("user hit signup");
   try {
-    User.create({
-      username: userdata.name,
-      email: userdata.email,
-      password: bcrypt.hashSync(userdata.password, 8),
+    var flag = true;
+    User.findOne({where: {email: userdata.email}}).then((data) => {
+      if (data) {
+        res.status(401).json({message: "user already exists"});
+        flag = false;
+      }
     });
-    UserPrefs.create({});
-    res.status(200).json({message: "user created from json file"});
+    if (flag) {
+      User.create({
+        username: userdata.name,
+        email: userdata.email,
+        password: bcrypt.hashSync(userdata.password, 8),
+      });
+      UserPrefs.create({});
+      res.status(200).json({message: "user created from json file"});
+    }
   } catch (err) {
     res.status(401).json({message: "failed to create user" + err.message});
   }
@@ -51,7 +60,9 @@ app.get("/api/club/:id", (req, res) => {
     res.status(404).json({message: `failed to fetch club with id ${req.params.id}`});
   }
 });
-
+app.post("/api/club/:id", (req, res) => {
+  console.log(`user hit club update with id:${req.params.id} `);
+});
 app.post("/api/reset-password", (req, res) => {
   const id = req.body.id;
 });
