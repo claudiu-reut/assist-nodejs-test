@@ -15,9 +15,9 @@ const User = db.user;
 const UserPrefs = db.userpref;
 const Club = db.club;
 console.log(userdata);
-db.sequelize.sync({force: true}).then(() => {
-  console.log("Drop and Resync Db");
-});
+// db.sequelize.sync({force: true}).then(() => {
+//   console.log("Drop and Resync Db");
+// });
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
